@@ -47,5 +47,10 @@ namespace leave_management.Repository
             _dbLeaveHistoryRepository.LeaveHistories.Update(par_locClass);
             return Save();
         }
+
+        public bool checkExists(int par_ID)
+        {
+            return _dbLeaveHistoryRepository.LeaveHistories.Any(x => x.LeaveHistoryID == par_ID);
+        }
     }
 }

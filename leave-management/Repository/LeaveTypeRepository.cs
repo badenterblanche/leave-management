@@ -1,5 +1,6 @@
 ﻿using leave_management.Contracts;
 using leave_management.Data;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace leave_management.Repository
         {
             _dbLeaveTypeRepository = par_dbLeaveTypeRepository;
         }
+
+       
 
         public bool Create(LeaveType par_locClass)
         {
@@ -52,6 +55,11 @@ namespace leave_management.Repository
         {
             _dbLeaveTypeRepository.LeaveTypes.Update(par_locClass);
             return Save();
+        }
+
+        public bool checkExists(int par_ID)
+        {
+            return _dbLeaveTypeRepository.LeaveTypes.Any(x => x.LeaveTypeID == par_ID);
         }
     }
 

@@ -13,5 +13,6 @@ namespace leave_management.Contracts
         bool Update(parClass par_locClass);
         bool Delete(parClass par_locClass);
         bool Save();
+        bool checkExists(int par_ID);
     }
 }

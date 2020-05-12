@@ -47,5 +47,10 @@ namespace leave_management.Repository
             _dbLeaveAllocationRepository.LeaveAllocations.Update(par_locClass);
             return Save();
         }
+
+        public bool checkExists(int par_ID)
+        {
+            return _dbLeaveAllocationRepository.LeaveAllocations.Any(x => x.LeaveAllocationID == par_ID);
+        }
     }
 }
