@@ -42,7 +42,8 @@ namespace leave_management
 
             services.AddAutoMapper(typeof(AutoMapperClass));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -51,7 +52,10 @@ namespace leave_management
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            UserManager<IdentityUser> par_locUserManager,
+            RoleManager<IdentityRole> par_locRoleManager,
+            IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -71,6 +75,8 @@ namespace leave_management
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            SeedDataClass.Seed(par_locUserManager, par_locRoleManager);
 
             app.UseEndpoints(endpoints =>
             {
