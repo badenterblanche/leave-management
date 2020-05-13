@@ -12,7 +12,6 @@ namespace leave_management.Models
     {
         public int LeaveAllocationID { get; set; }
 
-        [Required]
         public int NumberOfDays { get; set; }
         public DateTime DateCreated { get; set; }
 
@@ -24,5 +23,13 @@ namespace leave_management.Models
 
         public IEnumerable<SelectListItem> Employees { get; set; }
         public IEnumerable<SelectListItem> LeaveTypes { get; set; }
+
+        public int Period { get; set; }
+    }
+
+    public class CreateLeaveAllocationVMClass
+    {
+        public int NumberUpdated { get; set; }
+        public List<LeaveTypeVMClass> ListLeaveTypeVMClass { get; set; }
     }
 }

@@ -52,5 +52,12 @@ namespace leave_management.Repository
         {
             return _dbLeaveAllocationRepository.LeaveAllocations.Any(x => x.LeaveAllocationID == par_ID);
         }
+
+        public bool checkLeaveAllocated(string par_strEmployeeID, int par_intLeaveTypeID, int par_intPeriod)
+        {
+            par_intPeriod = DateTime.Now.Year;
+
+             return findAll().Where(X => X.EmployeeID == par_strEmployeeID && X.LeaveTypeID == par_intLeaveTypeID && X.Period == par_intPeriod).Any();
+        }
     }
 }

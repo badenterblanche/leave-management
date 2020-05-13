@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace leave_management.Controllers
 {
-    [Authorize(Roles = "Administrator"]
+    [Authorize(Roles = "Administrator")]
     public class LeaveTypesController : Controller
     {
         
