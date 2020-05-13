@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using leave_management.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ namespace leave_management
 {
     public static class SeedDataClass
     {
-        public static void Seed(UserManager<IdentityUser> par_locUserManager,
+        public static void Seed(UserManager<Employee> par_locUserManager,
             RoleManager<IdentityRole> par_locRoleManager)
         {
             SeedRoles(par_locRoleManager);
@@ -42,11 +43,11 @@ namespace leave_management
             }
         }
 
-        private static void SeedUsers(UserManager<IdentityUser> par_locUserManager)
+        private static void SeedUsers(UserManager<Employee> par_locUserManager)
         {   
             if (par_locUserManager.FindByEmailAsync("Admin@Localhost.co.za").Result == null)
             {
-                IdentityUser locIdentityUser = new IdentityUser
+                Employee locIdentityUser = new Employee
                 {
                     UserName = "Admin@Localhost.co.za",
                     Email = "Admin@Localhost.co.za"
