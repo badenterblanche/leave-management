@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -19,16 +20,18 @@ namespace leave_management.Controllers
     public class LeaveAllocationController : Controller
     {
         private readonly ILeaveTypeRepository _ILeaveTypeRepository;
-        private readonly ILeaveAllocationRepository _ILeaveApplicationRepository;
+        private readonly ILeaveAllocationRepository _ILeaveAllocationRepository;
         private readonly IMapper _IMapper;
         private readonly UserManager<Employee> _userManager;
 
-        public LeaveAllocationController(ILeaveTypeRepository par_ILeaveTypeRepository, 
-            ILeaveAllocationRepository par_ILeaveApplicationRepository, IMapper par_IMapper,
+        public LeaveAllocationController(
+            ILeaveTypeRepository par_ILeaveTypeRepository, 
+            ILeaveAllocationRepository par_ILeaveAllocationRepository, 
+            IMapper par_IMapper,
             UserManager<Employee> par_UserManager)
         {
             _ILeaveTypeRepository = par_ILeaveTypeRepository;
-            _ILeaveApplicationRepository = par_ILeaveApplicationRepository;
+            _ILeaveAllocationRepository = par_ILeaveAllocationRepository;
             _IMapper = par_IMapper;
             _userManager = par_UserManager;
         }
@@ -54,7 +57,7 @@ namespace leave_management.Controllers
             int intCounter = 0;
             foreach (var forEmployee in varEmployees)
             {
-                if (!_ILeaveApplicationRepository.checkLeaveAllocated(forEmployee.Id, id, DateTime.Now.Year))
+                if (!_ILeaveAllocationRepository.checkLeaveAllocated(forEmployee.Id, id, DateTime.Now.Year))
                 {
                     intCounter++;
                     LeaveAllocationVMClass locLeaveAllocationVMClass = new LeaveAllocationVMClass
@@ -67,7 +70,7 @@ namespace leave_management.Controllers
                     };
 
                     var varLeaveAllocationMap = _IMapper.Map<LeaveAllocation>(locLeaveAllocationVMClass);
-                    _ILeaveApplicationRepository.Create(varLeaveAllocationMap);
+                    _ILeaveAllocationRepository.Create(varLeaveAllocationMap);
                 }
 
             }
@@ -90,9 +93,21 @@ namespace leave_management.Controllers
 
 
         // GET: LeaveAllocation/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
-            return View();
+            var varEmployeeVM = _IMapper.Map<EmployeeVMClass>(_userManager.FindByIdAsync(id).Result);
+
+            var Period = DateTime.Now.Year;
+
+            var varEmployeeLeaveAllocationsVM = _IMapper.Map <List<LeaveAllocationVMClass>>(_ILeaveAllocationRepository.getEmployeeLeaveAllocations(id));
+
+            ViewAllocationsVMClass locViewAllocationsVMClass = new ViewAllocationsVMClass
+            {
+                prop_clsEmployeeVMClass = varEmployeeVM,
+                prop_lstLeaveAllocationVMClass = varEmployeeLeaveAllocationsVM
+            };
+
+            return View(locViewAllocationsVMClass);
         }
 
         // GET: LeaveAllocation/Create
@@ -121,20 +136,34 @@ namespace leave_management.Controllers
         // GET: LeaveAllocation/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
-            //test again111
+            var varLeaveAllocation_VMClass = _IMapper.Map<EditLeaveAllocationVMClass>(_ILeaveAllocationRepository.FindByID(id));
+            return View(varLeaveAllocation_VMClass);
         }
 
         // POST: LeaveAllocation/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(EditLeaveAllocationVMClass par_EditLeaveAllocationVMClass)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(par_EditLeaveAllocationVMClass);
+                }
+
+                var varRecord = _ILeaveAllocationRepository.FindByID(par_EditLeaveAllocationVMClass.LeaveAllocationID);
+                varRecord.NumberOfDays = par_EditLeaveAllocationVMClass.NumberOfDays;
+
+                bool isSuccess = _ILeaveAllocationRepository.Update(varRecord);
+                if (!isSuccess)
+                {
+                    ModelState.AddModelError("", "Error with update");
+                    return View(par_EditLeaveAllocationVMClass);
+                }
                 // TODO: Add update logic here
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = par_EditLeaveAllocationVMClass.EmployeeID });
             }
             catch
             {

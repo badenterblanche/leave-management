@@ -1,8 +1,10 @@
 ﻿using leave_management.Contracts;
 using leave_management.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace leave_management.Repository
@@ -28,12 +30,18 @@ namespace leave_management.Repository
 
         public ICollection<LeaveAllocation> findAll()
         {
-            return _dbLeaveAllocationRepository.LeaveAllocations.ToList();
+            return _dbLeaveAllocationRepository.LeaveAllocations
+                .Include(x => x.LeaveType)
+                .Include(x => x.Employee)
+                .ToList();
         }
 
         public LeaveAllocation FindByID(int par_locID)
         {
-            return _dbLeaveAllocationRepository.LeaveAllocations.Find(par_locID);
+            return _dbLeaveAllocationRepository.LeaveAllocations
+                .Include(x => x.LeaveType)
+                .Include(x => x.Employee)
+                .FirstOrDefault(x => x.LeaveAllocationID == par_locID);
         }
 
         public bool Save()
@@ -58,6 +66,14 @@ namespace leave_management.Repository
             par_intPeriod = DateTime.Now.Year;
 
              return findAll().Where(X => X.EmployeeID == par_strEmployeeID && X.LeaveTypeID == par_intLeaveTypeID && X.Period == par_intPeriod).Any();
+        }
+
+        public ICollection<LeaveAllocation> getEmployeeLeaveAllocations(string par_strEmployeeID)
+        {
+            var varPeriod = DateTime.Now.Year;
+            return findAll()
+                .Where(x => x.EmployeeID == par_strEmployeeID && x.Period == varPeriod)
+                .ToList();
         }
     }
 }

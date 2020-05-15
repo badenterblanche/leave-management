@@ -13,8 +13,11 @@ namespace leave_management.Mappings
         public AutoMapperClass()
         {
             CreateMap<LeaveType, LeaveTypeVMClass>().ReverseMap();
+            CreateMap<LeaveType, CreateLeaveTypesVMClass>().ReverseMap();
             CreateMap<LeaveHistory, LeaveHistoryVMClass>().ReverseMap();
             CreateMap<LeaveAllocation, LeaveAllocationVMClass>().ReverseMap();
+            CreateMap<LeaveAllocation, CreateLeaveAllocationVMClass>().ReverseMap();
+            CreateMap<LeaveAllocation, EditLeaveAllocationVMClass>().ReverseMap();
             CreateMap<Employee, EmployeeVMClass>().ReverseMap();
         }
     }

@@ -13,11 +13,15 @@ namespace leave_management.Data
             : base(options)
         {
         }
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Employee> Employees { get; set; }  
         public DbSet<LeaveType> LeaveTypes { get; set; }
         public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
         public DbSet<LeaveHistory> LeaveHistories { get; set; }
         public DbSet<leave_management.Models.LeaveTypeVMClass> LeaveTypeVMClass { get; set; }
         public DbSet<leave_management.Models.CreateLeaveTypesVMClass> CreateLeaveTypesVMClass { get; set; }
+        public DbSet<leave_management.Models.EmployeeVMClass> EmployeeVMClass { get; set; }
+        public DbSet<leave_management.Models.LeaveAllocationVMClass> LeaveAllocationVMClass { get; set; }
+        public DbSet<leave_management.Models.EditLeaveAllocationVMClass> EditLeaveAllocationVMClass { get; set; }
+        public DbSet<leave_management.Models.CreateLeaveAllocationVMClass> CreateLeaveAllocationVMClass { get; set; }
     }
 }
