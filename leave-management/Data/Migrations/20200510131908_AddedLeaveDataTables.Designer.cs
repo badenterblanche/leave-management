@@ -257,7 +257,7 @@ namespace leave_management.Data.Migrations
 
             modelBuilder.Entity("leave_management.Data.LeaveHistory", b =>
                 {
-                    b.Property<int>("LeaveHistoryID")
+                    b.Property<int>("LeaveRequestID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -286,7 +286,7 @@ namespace leave_management.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("LeaveHistoryID");
+                    b.HasKey("LeaveRequestID");
 
                     b.HasIndex("ApprovedByEmployeeID");
 

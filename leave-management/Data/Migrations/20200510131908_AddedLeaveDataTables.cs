@@ -53,7 +53,7 @@ namespace leave_management.Data.Migrations
                 name: "LeaveHistories",
                 columns: table => new
                 {
-                    LeaveHistoryID = table.Column<int>(nullable: false)
+                    LeaveRequestID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestedEmployeeID = table.Column<string>(nullable: true),
                     StartDate = table.Column<DateTime>(nullable: false),
@@ -66,7 +66,7 @@ namespace leave_management.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LeaveHistories", x => x.LeaveHistoryID);
+                    table.PrimaryKey("PK_LeaveHistories", x => x.LeaveRequestID);
                     table.ForeignKey(
                         name: "FK_LeaveHistories_AspNetUsers_ApprovedByEmployeeID",
                         column: x => x.ApprovedByEmployeeID,

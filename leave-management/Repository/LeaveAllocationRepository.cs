@@ -75,5 +75,12 @@ namespace leave_management.Repository
                 .Where(x => x.EmployeeID == par_strEmployeeID && x.Period == varPeriod)
                 .ToList();
         }
+
+        public LeaveAllocation getEmployeeTypeAllocation(string par_strEmployeeID, int par_intLeaveTypeID)
+        {
+            var varPeriod = DateTime.Now.Year;
+            return findAll()
+                .FirstOrDefault(x => x.EmployeeID == par_strEmployeeID && x.Period == varPeriod && x.LeaveTypeID == par_intLeaveTypeID);
+        }
     }
 }

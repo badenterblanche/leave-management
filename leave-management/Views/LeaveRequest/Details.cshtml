@@ -1,0 +1,49 @@
+﻿@model leave_management.Models.LeaveRequestVMClass
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<h5>@Model.Approved</h5>
+
+<div>
+    <h4>@Model.RequestedEmployee.Email</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LeaveRequestID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LeaveRequestID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RequestedEmployeeID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RequestedEmployeeID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        
+    </dl>
+</div>
+<div>
+    @if (Model.Approved == null)
+    {
+        <a asp-action="ApproveRequest" asp-route-id="@Model.LeaveRequestID"><i class="fa fa-check"></i>Approve</a>
+        <a asp-action="RejectRequest" asp-route-id="@Model.LeaveRequestID"><i class="fa fa-remove"></i>Reject</a>
+    }
+    <a asp-action="Index"><i class="fa fa-arrow-left"></i>Back to List</a>
+</div>  

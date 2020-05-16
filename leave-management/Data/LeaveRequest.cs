@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace leave_management.Data
 {
-    public class LeaveHistory
+    public class LeaveRequest
     {
         [Key]
-        public int LeaveHistoryID { get; set; }
+        public int LeaveRequestID { get; set; }
         [ForeignKey("RequestedEmployeeID")]
         public Employee RequestedEmployee { get; set; }
         public string RequestedEmployeeID { get; set; }
+        public string RequestedEmployeeComment { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         [Required]
@@ -27,5 +28,6 @@ namespace leave_management.Data
         [ForeignKey("ApprovedByEmployeeID")]
         public Employee ApprovedByEmployee { get; set; }
         public string ApprovedByEmployeeID { get; set; }
+        public string ApprovedByEmployeeComment { get; set; }
     }
 }
