@@ -23,7 +23,10 @@
             </td>
 
             <td>
-                @Html.ActionLink("Allocate to Employee", "SetLEave", new {id = item.LeaveTypeID })
+                <a class="btn btn-outline-success" asp-action="SetLeave" asp-route-id="item.LeaveTypeID">
+                    <i class="fas fa-user-edit"></i> Allocate to Employee
+                </a>
+                @*@Html.ActionLink("Allocate to Employee", "SetLEave", new { id = item.LeaveTypeID })*@
             </td>
 
         </tr>

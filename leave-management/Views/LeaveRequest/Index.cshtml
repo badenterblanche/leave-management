@@ -4,20 +4,51 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
 <div class="row">
     <div class="col-md-3">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body bg-success">
-                <h5 class="card-title">@Model.intTotalRequests</h5>
-                <p class="card-text">@Html.DisplayNameFor(Model => Model.intTotalRequests)</p>
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">@Html.DisplayNameFor(Model => Model.intTotalRequests)</span>
+                <span class="info-box-number">@Model.intTotalRequests</span>
             </div>
-        </div>`
+            <!-- /.info-box-content -->
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="info-box">
+            <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">@Html.DisplayNameFor(Model => Model.intTotalRequests)</span>
+                <span class="info-box-number">@Model.intTotalRequests</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">@Html.DisplayNameFor(Model => Model.intTotalRequests)</span>
+                <span class="info-box-number">@Model.intTotalRequests</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="info-box">
+            <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">@Html.DisplayNameFor(Model => Model.intTotalRequests)</span>
+                <span class="info-box-number">@Model.intTotalRequests</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
     </div>
 </div>
 <table class="table" id="tblData">
