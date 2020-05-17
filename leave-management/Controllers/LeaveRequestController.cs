@@ -39,10 +39,10 @@ namespace leave_management.Controllers
 
         [Authorize(Roles = "Administrator")]
         // GET: LeaveRequest
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var varLeaveRequestRepoClass = _ILeaveRequestRepository.findAll().OrderByDescending(x => x.DateRequested);
-            var var_lstLeaveRequestVMClass = _IMapper.Map<List<LeaveRequestVMClass>>(varLeaveRequestRepoClass);
+            var varLeaveRequestRepoClass = await _ILeaveRequestRepository.findAll();
+            var var_lstLeaveRequestVMClass = _IMapper.Map<List<LeaveRequestVMClass>>(varLeaveRequestRepoClass.OrderByDescending(x => x.DateRequested));
 
             var varLeaveRequestViewAdminVM = new LeaveRequestViewAdminVM
             {
@@ -57,9 +57,9 @@ namespace leave_management.Controllers
         }
 
         // GET: LeaveRequest/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            var varLeaveRequestRepositoryClass = _ILeaveRequestRepository.FindByID(id);
+            var varLeaveRequestRepositoryClass = await _ILeaveRequestRepository.FindByID(id);
 
             var varLeaveRequestVMClass = _IMapper.Map<LeaveRequestVMClass>(varLeaveRequestRepositoryClass);
 
@@ -67,9 +67,9 @@ namespace leave_management.Controllers
         }
 
         // GET: LeaveRequest/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            var varLeaveTypeRepositoryClass = _ILeaveTypeRepository.findAll();
+            var varLeaveTypeRepositoryClass = await _ILeaveTypeRepository.findAll();
 
             var varSelectListItem = varLeaveTypeRepositoryClass.Select(x => new SelectListItem
             {
@@ -88,14 +88,14 @@ namespace leave_management.Controllers
         // POST: LeaveRequest/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateLeaveRequestVMClass parCreateLeaveRequestVMClass)
+        public async Task<ActionResult> Create(CreateLeaveRequestVMClass parCreateLeaveRequestVMClass)
         {
             try
             {
                 var varStartDate = Convert.ToDateTime(parCreateLeaveRequestVMClass.StartDate);
                 var varEndDate = Convert.ToDateTime(parCreateLeaveRequestVMClass.EndDate);
 
-                var varLeaveTypeRepositoryClass = _ILeaveTypeRepository.findAll();
+                var varLeaveTypeRepositoryClass = await _ILeaveTypeRepository.findAll();
                 var varSelectListItem = varLeaveTypeRepositoryClass.Select(x => new SelectListItem
                 {
                     Text = x.Name,
@@ -120,7 +120,7 @@ namespace leave_management.Controllers
                 
 
                 var varEmployeeLoggedIn = _userManager.GetUserAsync(User).Result;
-                var varLeaveAllocationClass = _ILeaveAllocationRepository.getEmployeeTypeAllocation(varEmployeeLoggedIn.Id, parCreateLeaveRequestVMClass.LeaveTypeID);
+                var varLeaveAllocationClass = await _ILeaveAllocationRepository.getEmployeeTypeAllocation(varEmployeeLoggedIn.Id, parCreateLeaveRequestVMClass.LeaveTypeID);
 
                 if (varLeaveAllocationClass.LeaveAllocationID == 0)
                 {
@@ -146,7 +146,7 @@ namespace leave_management.Controllers
                 };
                 
                 var varLeaveRequestDataModel = _IMapper.Map<LeaveRequest>(varLeaveRequestVMClass);
-                bool isSuccess = _ILeaveRequestRepository.Create(varLeaveRequestDataModel);
+                bool isSuccess = await _ILeaveRequestRepository.Create(varLeaveRequestDataModel);
 
                 if (!isSuccess)
                 {
@@ -212,27 +212,27 @@ namespace leave_management.Controllers
             }
         }
 
-        public ActionResult ApproveRequest (int id)
+        public async Task<ActionResult> ApproveRequest (int id)
         {
 
             try
             {
-                var varLeaveRequestRepositoryClass = _ILeaveRequestRepository.FindByID(id);
+                var varLeaveRequestRepositoryClass = await _ILeaveRequestRepository.FindByID(id);
                 varLeaveRequestRepositoryClass.Approved = true;
                 varLeaveRequestRepositoryClass.DateActioned = DateTime.Now;
-                var varEmployeeLoggedIn = _userManager.GetUserAsync(User).Result;
+                var varEmployeeLoggedIn = await _userManager.GetUserAsync(User);
                 varLeaveRequestRepositoryClass.ApprovedByEmployeeID = varEmployeeLoggedIn.Id;
 
-                bool isSuccess = _ILeaveRequestRepository.Update(varLeaveRequestRepositoryClass);
+                bool isSuccess = await _ILeaveRequestRepository.Update(varLeaveRequestRepositoryClass);
 
-                var varLeaveAllocationRepositoryClass = _ILeaveAllocationRepository.getEmployeeTypeAllocation(varLeaveRequestRepositoryClass.RequestedEmployeeID, varLeaveRequestRepositoryClass.LeaveTypeID);
+                var varLeaveAllocationRepositoryClass = await _ILeaveAllocationRepository.getEmployeeTypeAllocation(varLeaveRequestRepositoryClass.RequestedEmployeeID, varLeaveRequestRepositoryClass.LeaveTypeID);
 
                 double dblDays = (varLeaveRequestRepositoryClass.EndDate.Date - varLeaveRequestRepositoryClass.StartDate.Date).TotalDays;
                 double dblBalance = varLeaveAllocationRepositoryClass.NumberOfDays - dblDays;
 
                 varLeaveAllocationRepositoryClass.NumberOfDays = (int)dblBalance;
 
-                bool isSuccessAllocation = _ILeaveAllocationRepository.Update(varLeaveAllocationRepositoryClass);
+                bool isSuccessAllocation = await _ILeaveAllocationRepository.Update(varLeaveAllocationRepositoryClass);
 
                 return RedirectToAction(nameof(Index), "Home");
             }
@@ -242,17 +242,17 @@ namespace leave_management.Controllers
             }
         }
 
-        public ActionResult RejectRequest(int id)
+        public async Task<ActionResult> RejectRequest(int id)
         {
             try
             {
-                var varLeaveRequestRepositoryClass = _ILeaveRequestRepository.FindByID(id);
+                var varLeaveRequestRepositoryClass = await _ILeaveRequestRepository.FindByID(id);
                 varLeaveRequestRepositoryClass.Approved = false;
                 varLeaveRequestRepositoryClass.DateActioned = DateTime.Now;
                 var varEmployeeLoggedIn = _userManager.GetUserAsync(User).Result;
                 varLeaveRequestRepositoryClass.ApprovedByEmployeeID = varEmployeeLoggedIn.Id;
 
-                bool isSuccess = _ILeaveRequestRepository.Update(varLeaveRequestRepositoryClass);
+                bool isSuccess = await _ILeaveRequestRepository.Update(varLeaveRequestRepositoryClass);
                 return RedirectToAction(nameof(Index), "Home");
             }
             catch 

@@ -7,12 +7,12 @@ namespace leave_management.Contracts
 {
     public interface IRepositoryBase<parClass> where parClass : class
     {
-        ICollection<parClass> findAll();
-        parClass FindByID(int par_locID);
-        bool Create(parClass par_locClass);
-        bool Update(parClass par_locClass);
-        bool Delete(parClass par_locClass);
-        bool Save();
-        bool checkExists(int par_ID);
+        Task<ICollection<parClass>> findAll();
+        Task<parClass> FindByID(int par_locID);
+        Task<bool> Create(parClass par_locClass);
+        Task<bool> Update(parClass par_locClass);
+        Task<bool> Delete(parClass par_locClass);
+        Task<bool> Save();
+        Task<bool> checkExists(int par_ID);
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace leave_management.Repository
 {
@@ -18,26 +19,26 @@ namespace leave_management.Repository
 
        
 
-        public bool Create(LeaveType par_locClass)
+        public async Task<bool> Create(LeaveType par_locClass)
         {
-            _dbLeaveTypeRepository.LeaveTypes.Add(par_locClass);
-            return Save();
+            await _dbLeaveTypeRepository.LeaveTypes.AddAsync(par_locClass);
+            return await Save();
         }
 
-        public bool Delete(LeaveType par_locClass)
+        public async Task<bool> Delete(LeaveType par_locClass)
         {
             _dbLeaveTypeRepository.LeaveTypes.Remove(par_locClass);
-            return Save();
+            return await Save();
         }
 
-        public ICollection<LeaveType> findAll()
+        public async Task<ICollection<LeaveType>> findAll()
         {
-            return _dbLeaveTypeRepository.LeaveTypes.ToList();
+            return await _dbLeaveTypeRepository.LeaveTypes.ToListAsync();
         }
 
-        public LeaveType FindByID(int par_locID)
+        public async Task<LeaveType> FindByID(int par_locID)
         {
-            return _dbLeaveTypeRepository.LeaveTypes.Find(par_locID);
+            return await _dbLeaveTypeRepository.LeaveTypes.FindAsync(par_locID);
         }
 
         public ICollection<LeaveType> getEmployeesByLeaveType(int LeaveTypeID)
@@ -45,21 +46,21 @@ namespace leave_management.Repository
             throw new NotImplementedException();
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            int intChanges = _dbLeaveTypeRepository.SaveChanges();
+            int intChanges = await _dbLeaveTypeRepository.SaveChangesAsync();
             return intChanges > 0;
         }
 
-        public bool Update(LeaveType par_locClass)
+        public async Task<bool> Update(LeaveType par_locClass)
         {
             _dbLeaveTypeRepository.LeaveTypes.Update(par_locClass);
-            return Save();
+            return await Save();
         }
 
-        public bool checkExists(int par_ID)
+        public async Task<bool> checkExists(int par_ID)
         {
-            return _dbLeaveTypeRepository.LeaveTypes.Any(x => x.LeaveTypeID == par_ID);
+            return await _dbLeaveTypeRepository.LeaveTypes.AnyAsync(x => x.LeaveTypeID == par_ID);
         }
     }
 

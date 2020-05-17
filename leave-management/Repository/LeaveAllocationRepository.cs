@@ -16,71 +16,71 @@ namespace leave_management.Repository
         {
             _dbLeaveAllocationRepository = par_dbLeaveAllocationRepository;
         }
-        public bool Create(LeaveAllocation par_locClass)
+        public async Task<bool> Create(LeaveAllocation par_locClass)
         {
-            _dbLeaveAllocationRepository.LeaveAllocations.Add(par_locClass);
-            return Save();
+            await _dbLeaveAllocationRepository.LeaveAllocations.AddAsync(par_locClass);
+            return await Save();
         }
 
-        public bool Delete(LeaveAllocation par_locClass)
+        public async Task<bool> Delete(LeaveAllocation par_locClass)
         {
             _dbLeaveAllocationRepository.LeaveAllocations.Remove(par_locClass);
-            return Save();
+            return await Save();
         }
 
-        public ICollection<LeaveAllocation> findAll()
+        public async Task<ICollection<LeaveAllocation>> findAll()
         {
-            return _dbLeaveAllocationRepository.LeaveAllocations
+            return await _dbLeaveAllocationRepository.LeaveAllocations
                 .Include(x => x.LeaveType)
                 .Include(x => x.Employee)
-                .ToList();
+                .ToListAsync();
         }
 
-        public LeaveAllocation FindByID(int par_locID)
+        public async Task<LeaveAllocation> FindByID(int par_locID)
         {
-            return _dbLeaveAllocationRepository.LeaveAllocations
+            return await _dbLeaveAllocationRepository.LeaveAllocations
                 .Include(x => x.LeaveType)
                 .Include(x => x.Employee)
-                .FirstOrDefault(x => x.LeaveAllocationID == par_locID);
+                .FirstOrDefaultAsync(x => x.LeaveAllocationID == par_locID);
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            int intChanges = _dbLeaveAllocationRepository.SaveChanges();
+            int intChanges = await _dbLeaveAllocationRepository.SaveChangesAsync();
             return intChanges > 0;
         }
 
-        public bool Update(LeaveAllocation par_locClass)
+        public async Task<bool> Update(LeaveAllocation par_locClass)
         {
             _dbLeaveAllocationRepository.LeaveAllocations.Update(par_locClass);
-            return Save();
+            return await Save();
         }
 
-        public bool checkExists(int par_ID)
+        public async Task<bool> checkExists(int par_ID)
         {
-            return _dbLeaveAllocationRepository.LeaveAllocations.Any(x => x.LeaveAllocationID == par_ID);
+            return await _dbLeaveAllocationRepository.LeaveAllocations.AnyAsync(x => x.LeaveAllocationID == par_ID);
         }
 
-        public bool checkLeaveAllocated(string par_strEmployeeID, int par_intLeaveTypeID, int par_intPeriod)
+        public async Task<bool> checkLeaveAllocated(string par_strEmployeeID, int par_intLeaveTypeID, int par_intPeriod)
         {
             par_intPeriod = DateTime.Now.Year;
-
-             return findAll().Where(X => X.EmployeeID == par_strEmployeeID && X.LeaveTypeID == par_intLeaveTypeID && X.Period == par_intPeriod).Any();
+            var varLeaveAllocation = await findAll();
+            return varLeaveAllocation.Where(X => X.EmployeeID == par_strEmployeeID && X.LeaveTypeID == par_intLeaveTypeID && X.Period == par_intPeriod).Any();
         }
 
-        public ICollection<LeaveAllocation> getEmployeeLeaveAllocations(string par_strEmployeeID)
+        public async Task<ICollection<LeaveAllocation>> getEmployeeLeaveAllocations(string par_strEmployeeID)
         {
             var varPeriod = DateTime.Now.Year;
-            return findAll()
-                .Where(x => x.EmployeeID == par_strEmployeeID && x.Period == varPeriod)
-                .ToList();
+            var varLeaveRequest = await findAll();
+            return varLeaveRequest.Where(x => x.EmployeeID == par_strEmployeeID 
+                                     && x.Period == varPeriod).ToList();
         }
 
-        public LeaveAllocation getEmployeeTypeAllocation(string par_strEmployeeID, int par_intLeaveTypeID)
+        public async Task<LeaveAllocation> getEmployeeTypeAllocation(string par_strEmployeeID, int par_intLeaveTypeID)
         {
             var varPeriod = DateTime.Now.Year;
-            return findAll()
-                .FirstOrDefault(x => x.EmployeeID == par_strEmployeeID && x.Period == varPeriod && x.LeaveTypeID == par_intLeaveTypeID);
+            var varLeaveAllocation = await findAll();
+            return varLeaveAllocation.FirstOrDefault(x => x.EmployeeID == par_strEmployeeID && x.Period == varPeriod && x.LeaveTypeID == par_intLeaveTypeID);
         }
     }
 }

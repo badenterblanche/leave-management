@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using leave_management.Contracts;
@@ -28,22 +29,23 @@ namespace leave_management.Controllers
         }
         // GET: LeaveTypes
         
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var leavetypes = _ILeaveTypeRepository.findAll().ToList();
-            var LeaveTypeModel = _IMapper.Map<List<LeaveType>, List<LeaveTypeVMClass>>(leavetypes);
+            var leavetypes = await _ILeaveTypeRepository.findAll();
+
+            var LeaveTypeModel = _IMapper.Map<List<LeaveType>, List<LeaveTypeVMClass>>(leavetypes.ToList());
             return View(LeaveTypeModel);
         }
 
         // GET: LeaveTypes/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            bool isExist = _ILeaveTypeRepository.checkExists(id);
+            bool isExist = await _ILeaveTypeRepository.checkExists(id);
             if (!isExist)
             {
                 return NotFound();
             }
-            LeaveType locLeaveTypeClass =  _ILeaveTypeRepository.FindByID(id);
+            LeaveType locLeaveTypeClass = await _ILeaveTypeRepository.FindByID(id);
             var LeaveTypeModel = _IMapper.Map<LeaveTypeVMClass>(locLeaveTypeClass);
 
             return View(LeaveTypeModel);
@@ -58,7 +60,7 @@ namespace leave_management.Controllers
         // POST: LeaveTypes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(LeaveTypeVMClass par_LeaveTypeVMClass)
+        public async Task<ActionResult> Create(LeaveTypeVMClass par_LeaveTypeVMClass)
         {
             try
             {
@@ -70,7 +72,7 @@ namespace leave_management.Controllers
                 var leavetype = _IMapper.Map<LeaveType>(par_LeaveTypeVMClass);
                 leavetype.DateCreated = DateTime.Now;
 
-                bool isSuccess = _ILeaveTypeRepository.Create(leavetype);
+                bool isSuccess = await _ILeaveTypeRepository.Create(leavetype);
                 if (!isSuccess)
                 {
                     ModelState.AddModelError("", "Something went wrong");
@@ -85,14 +87,14 @@ namespace leave_management.Controllers
         }
 
         // GET: LeaveTypes/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            if (!_ILeaveTypeRepository.checkExists(id)) 
+            if (!await _ILeaveTypeRepository.checkExists(id)) 
             {
                 return NotFound();
             }
 
-            LeaveType loc_LeaveType = _ILeaveTypeRepository.FindByID(id);
+            LeaveType loc_LeaveType = await _ILeaveTypeRepository.FindByID(id);
             var varModel = _IMapper.Map<LeaveTypeVMClass>(loc_LeaveType);
 
             
@@ -103,7 +105,7 @@ namespace leave_management.Controllers
         // POST: LeaveTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(LeaveTypeVMClass par_locLeaveTypeVMClass)
+        public async Task<ActionResult> Edit(LeaveTypeVMClass par_locLeaveTypeVMClass)
         {
             try
             {
@@ -116,7 +118,7 @@ namespace leave_management.Controllers
 
                 LeaveType locLeaveTypeDataClass = _IMapper.Map<LeaveType>(par_locLeaveTypeVMClass);
                 locLeaveTypeDataClass.DateCreated = DateTime.Now;
-                bool isSuccess = _ILeaveTypeRepository.Update(locLeaveTypeDataClass);
+                bool isSuccess = await _ILeaveTypeRepository.Update(locLeaveTypeDataClass);
                 if (!isSuccess)
                 {
                     ModelState.AddModelError("", "Something went wrong");
@@ -133,32 +135,32 @@ namespace leave_management.Controllers
         }
 
         // GET: LeaveTypes/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             // TODO: Add delete logic here
-            LeaveType locLeaveTypeRepositoryClass = _ILeaveTypeRepository.FindByID(id);
+            LeaveType locLeaveTypeRepositoryClass = await _ILeaveTypeRepository.FindByID(id);
             if (locLeaveTypeRepositoryClass == null)
             {
                 return NotFound();
             }
-            bool isSuccess = _ILeaveTypeRepository.Delete(locLeaveTypeRepositoryClass);
+            bool isSuccess = await _ILeaveTypeRepository.Delete(locLeaveTypeRepositoryClass);
             return RedirectToAction(nameof(Index));
         }
 
         // POST: LeaveTypes/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, LeaveTypeVMClass par_locLeaveTypeVMClass)
+        public async Task<ActionResult> Delete(int id, LeaveTypeVMClass par_locLeaveTypeVMClass)
         {
             try
             {
                 // TODO: Add delete logic here
-                LeaveType locLeaveTypeRepositoryClass = _ILeaveTypeRepository.FindByID(id);
+                LeaveType locLeaveTypeRepositoryClass = await _ILeaveTypeRepository.FindByID(id);
                 if (locLeaveTypeRepositoryClass == null)
                 {
                     return NotFound();
                 }
-                bool isSuccess = _ILeaveTypeRepository.Delete(locLeaveTypeRepositoryClass);
+                bool isSuccess = await _ILeaveTypeRepository.Delete(locLeaveTypeRepositoryClass);
                 return RedirectToAction(nameof(Index));
             }
             catch

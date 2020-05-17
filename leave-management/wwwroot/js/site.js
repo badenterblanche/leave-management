@@ -5,3 +5,7 @@
 $(document).ready(function () {
     $('#tblData').DataTable();
 });
+
+$('#myModal').on('shown.bs.modal', function () {
+    $('#myInput').focus()
+})

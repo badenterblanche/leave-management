@@ -5,7 +5,34 @@
 }
 
 <h1>Leave Types </h1>
-<hr/>
+<hr />
+
+<!-- Button trigger modal -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                @Html.DisplayNameFor(Model => Model.LeaveTypeID)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a asp-action="Details" asp-route-id="7" class="btn btn-warning ">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <p>
     <a asp-action="Create" class="btn btn-success"><i class="fa fa-plus"></i> Create New</a>
@@ -30,29 +57,32 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DefaultDays)
-            </td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DefaultDays)
+                </td>
 
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LeaveTypeID" class="btn btn-warning ">
-                    <i class="fas fa-pencil-alt"></i>
-                </a>
-                <a asp-action="Details" asp-route-id="@item.LeaveTypeID" class="btn btn-info">
-                    <i class="fas fa-info-circle"></i>
-                </a>
-                <a asp-action="Delete" asp-route-id="@item.LeaveTypeID" class="btn btn-danger" onclick="return confirm('Are you sure?')">
-                    <i class="fas fa-trash"></i>
-                </a>
-            </td>
-        </tr>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LeaveTypeID" class="btn btn-warning ">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a asp-action="Details" asp-route-id="@item.LeaveTypeID" class="btn btn-info">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.LeaveTypeID" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    <a asp-action="Modal" asp-route-id="@item.LeaveTypeID"  data-toggle="modal" data-target="#myModal" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
@@ -60,6 +90,6 @@
 @section Scripts
 {
     <script>
-        
+
     </script>
 }
